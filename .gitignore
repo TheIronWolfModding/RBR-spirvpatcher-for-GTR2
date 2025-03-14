@@ -1,3 +1,9 @@
 .ccls-cache/
 build/
 compile_commands.json
+
+.vs/
+spirv-tools
+spirv-tools/*
+!spirv-tools/.gitignore
+

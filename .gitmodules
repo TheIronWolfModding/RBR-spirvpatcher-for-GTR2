@@ -1,3 +1,4 @@
 [submodule "SPIRV-Tools"]
 	path = spirv-tools
 	url = https://github.com/KhronosGroup/SPIRV-Tools.git
+  ignore = all
