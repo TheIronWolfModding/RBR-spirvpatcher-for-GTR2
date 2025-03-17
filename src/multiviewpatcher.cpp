@@ -281,6 +281,9 @@ extern "C" __declspec(dllexport) int ChangeSPIRVMultiViewDataAccessLocation(uint
             }
             outvec = optimized;
         } else if (!t.Validate(outvec)) {
+#ifdef _DEBUG
+            OutputDebugStringA(std::format("================================ SHADER VALIDATION FAILED: =============================\n\n{}", as.str()).c_str());
+#endif // _DEBUG
             return -1;
         }
 
