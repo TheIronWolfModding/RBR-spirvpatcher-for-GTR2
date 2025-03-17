@@ -47,6 +47,7 @@ static std::optional<std::vector<std::string>> disassembleShader(const spvtools:
     }
 
     std::vector<std::string> a;
+    a.reserve(0xFFFF);
     std::stringstream sas(as);
     std::string l;
 
@@ -154,7 +155,9 @@ static void patchVertexShader(std::vector<std::string>& a, uint32_t f_idx, uint3
 extern "C" __declspec(dllexport) int OptimizeSPIRV(uint32_t* data, uint32_t size, uint32_t* data_out, uint32_t* size_out)
 {
     std::vector<uint32_t> in;
+    in.reserve(0xFFFF);
     std::vector<uint32_t> optimized;
+    optimized.reserve(0xFFFF);
 
     in.assign(data, data + size);
     spvtools::Optimizer opt(SPV_ENV_VULKAN_1_3);
@@ -175,6 +178,7 @@ extern "C" __declspec(dllexport) int OptimizeSPIRV(uint32_t* data, uint32_t size
 extern "C" __declspec(dllexport) int AddSPIRVMultiViewCapability(uint32_t* data, uint32_t size, uint32_t* data_out, uint32_t* size_out)
 {
     std::vector<uint32_t> in;
+    in.reserve(0xFFFF);
     in.assign(data, data + size);
 
     spvtools::SpirvTools t(SPV_ENV_VULKAN_1_3);
@@ -194,12 +198,16 @@ extern "C" __declspec(dllexport) int AddSPIRVMultiViewCapability(uint32_t* data,
         addMultiViewCapability(a);
         patchEntryPoint(a, false);
 
+        std::string buffer;
+        buffer.reserve(0xFFFF);
         std::ostringstream as;
+        as.str(buffer);
         for (const auto& l : a) {
             as << l << "\n";
         }
 
         std::vector<uint32_t> out;
+        out.reserve(0xFFFF);
         t.Assemble(as.str(), &out);
 
         if (!t.Validate(out)) {
@@ -222,6 +230,7 @@ extern "C" __declspec(dllexport) int AddSPIRVMultiViewCapability(uint32_t* data,
 extern "C" __declspec(dllexport) int ChangeSPIRVMultiViewDataAccessLocation(uint32_t* data, uint32_t size, uint32_t* data_out, uint32_t* size_out, uint32_t f_idx, uint32_t offset, int8_t optimize)
 {
     std::vector<uint32_t> in;
+    in.reserve(0xFFFF);
     in.assign(data, data + size);
 
     spvtools::SpirvTools t(SPV_ENV_VULKAN_1_3);
@@ -241,6 +250,7 @@ extern "C" __declspec(dllexport) int ChangeSPIRVMultiViewDataAccessLocation(uint
         // Pass through, nothing to do here as the modifications are done on DXVK side
         // Just run the optimizer if requested
         std::vector<uint32_t> optimized;
+        optimized.reserve(0xFFFF);
         std::vector<uint32_t>& outvec = in;
         if (optimize != 0) {
             spvtools::Optimizer opt(SPV_ENV_VULKAN_1_3);
@@ -268,7 +278,9 @@ extern "C" __declspec(dllexport) int ChangeSPIRVMultiViewDataAccessLocation(uint
         }
 
         std::vector<uint32_t> out;
+        out.reserve(0xFFFF);
         std::vector<uint32_t> optimized;
+        optimized.reserve(0xFFFF);
 
         t.Assemble(as.str(), &out);
         std::vector<uint32_t>& outvec = out;
@@ -281,9 +293,9 @@ extern "C" __declspec(dllexport) int ChangeSPIRVMultiViewDataAccessLocation(uint
             }
             outvec = optimized;
         } else if (!t.Validate(outvec)) {
-/*#ifdef _DEBUG
-            OutputDebugStringA(std::format("================================ SHADER VALIDATION FAILED: =============================\n\n{}", as.str()).c_str());
-#endif // _DEBUG*/
+            /*#ifdef _DEBUG
+                        OutputDebugStringA(std::format("================================ SHADER VALIDATION FAILED: =============================\n\n{}", as.str()).c_str());
+            #endif // _DEBUG*/
             return -1;
         }
 
