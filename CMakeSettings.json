@@ -7,7 +7,7 @@
 			"buildRoot": "${projectDir}\\out\\build\\${name}",
 			"installRoot": "${projectDir}\\out\\install\\${name}",
 			"cmakeCommandArgs": "",
-			"buildCommandArgs": "",
+			"buildCommandArgs": "-j 32",
 			"ctestCommandArgs": "",
 			"inheritEnvironments": [ "msvc_x86" ],
 			"variables": [
@@ -21,11 +21,11 @@
 		{
 			"name": "x86-Release",
 			"generator": "Ninja",
-			"configurationType": "MinSizeRel",
+			"configurationType": "Release",
 			"buildRoot": "${projectDir}\\out\\build\\${name}",
 			"installRoot": "${projectDir}\\out\\install\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "",
+			"cmakeCommandArgs": "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON -DCMAKE_CXX_FLAGS=\"/O2 /Ob2 /GF /Gy /DNDEBUG\"",
+			"buildCommandArgs": "-j 32",
 			"ctestCommandArgs": "",
 			"inheritEnvironments": [ "msvc_x86" ],
 			"variables": [
